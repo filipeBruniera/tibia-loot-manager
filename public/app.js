@@ -1,91 +1,65 @@
-window.addEventListener('load', () => {
-    loadList();
-    console.log('Página carregada - Lista atualizada');
-  });
-
-  async function loadList() {
+async function loadList() {
     try {
-      const response = await fetch('/list');
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      
-      const data = await response.json();
-      console.log('Dados recebidos:', data); // Debug
-      updateList(data.blacklistTypes);
-      
-    } catch (error) {
-      console.error('Falha ao carregar lista:', error);
-      showError('Erro de conexão com o servidor');
-    }
-  }
-
-// Função de busca aprimorada
-async function searchItems(query) {
-    try {
-        const response = await fetch(`https://tibiawiki.dev/api/v2/items?name=${encodeURIComponent(query)}`);
+        const response = await fetch('/list');
         const data = await response.json();
-        return data.items.map(item => ({ 
-            id: item.itemid, 
-            name: item.name 
-        }));
-    } catch {
-        return [];
+        displayItems(data.blacklistTypes);
+    } catch (error) {
+        alert('Erro ao carregar lista');
     }
 }
 
-// Adição com verificação
-// app.js - Atualize a função addItem()
+async function displayItems(ids) {
+    const listDiv = document.getElementById('itemList');
+    listDiv.innerHTML = await Promise.all(ids.map(async id => 
+        `<div class="item">
+            <span>${id} - ${await getName(id)}</span>
+            <button onclick="removeItem(${id})">Remover</button>
+        </div>`
+    )).then(html => html.join(''));
+}
+
+async function getName(id) {
+    try {
+        const response = await fetch(`/item-name/${id}`);
+        const data = await response.json();
+        return data.name;
+    } catch {
+        return 'Nome não encontrado';
+    }
+}
+
 async function addItem() {
-    const input = document.getElementById('itemId').value.trim();
+    const input = document.getElementById('itemInput').value.trim();
     if (!input) return;
 
     try {
-        // Busca via API
-        const results = await searchItems(input);
-        if (results.length === 0) throw new Error('Item não encontrado!');
-
-        // Seleciona o primeiro resultado válido
-        const { id, name } = results[0];
-        
-        // Adiciona via POST
-        await fetch('/add', {
+        const response = await fetch('/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id })
+            body: JSON.stringify({ input })
         });
 
-        // Atualização e feedback
-        alert(`${name} (ID: ${id}) adicionado!`);
-        loadList();
+        const result = await response.json();
         
+        if (!response.ok) throw new Error(result.error);
+        
+        // Atualização automática e feedback
+        const newItem = document.createElement('div');
+        newItem.className = 'item';
+        newItem.innerHTML = `
+            <span>${result.id} - ${await getName(result.id)}</span>
+            <button onclick="removeItem(${result.id})">Remover</button>
+        `;
+        document.getElementById('itemList').appendChild(newItem);
+        
+        document.getElementById('itemInput').value = '';
     } catch (error) {
-        alert(error.message);
+        alert(error.message || 'Erro ao adicionar item');
     }
 }
 
-    // Verificação final do ID
-    try {
-        const details = await fetch(`/item-details/${id}`).then(res => res.json());
-        if (!details || details.error) throw new Error();
-    } catch {
-        alert('ID inválido!');
-        return;
-    }
-
-    try {
-        await fetch('/add', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id })
-        });
-        loadList();
-    } catch {
-        alert('Erro ao adicionar item');
-    }
-
-
-// Remoção com confirmação
-async function confirmRemove(id) {
-    if (!confirm(`Confirmar remoção do item ${id}?`)) return;
+async function removeItem(id) {
+    if (!confirm(`Remover item ${id}?`)) return;
     
     try {
         await fetch('/remove', {
@@ -93,25 +67,11 @@ async function confirmRemove(id) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id })
         });
-        
-        // Atualização imediata
-        const response = await fetch('/list');
-        const { blacklistTypes } = await response.json();
-        updateList(blacklistTypes);
-        
+        loadList();
     } catch {
-        alert('Falha na remoção');
+        alert('Erro ao remover item');
     }
 }
 
-// Atualização da exibição de nomes
-async function getItemName(id) {
-    try {
-        const response = await fetch(`https://tibiawiki.dev/api/v2/items/${id}`);
-        const data = await response.json();
-        return data.name || 'Sem nome';
-    } catch {
-        return 'Erro na API';
-    }
-}
-
+// Inicialização
+loadList();

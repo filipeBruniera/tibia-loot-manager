@@ -1,135 +1,33 @@
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f0f2f5;
+    font-family: Arial, sans-serif;
     padding: 20px;
-    margin: 0;
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.search-box {
-    position: relative;
-    margin-bottom: 25px;
-}
-
-#searchInput {
-    width: 100%;
-    padding: 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
-    font-size: 16px;
-    transition: border-color 0.3s;
-}
-
-#searchInput:focus {
-    outline: none;
-    border-color: #007bff;
-}
-
-.search-results {
-    position: absolute;
-    width: 100%;
-    background: white;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
-    margin-top: 5px;
-    z-index: 100;
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.result-item {
-    padding: 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    transition: background 0.2s;
-}
-
-.result-item:hover {
-    background: #f8f9fa;
-}
-
-.result-id {
-    color: #6c757d;
-    font-weight: bold;
-}
-
-.result-name {
-    color: #495057;
 }
 
 .input-group {
+    margin: 20px 0;
     display: flex;
     gap: 10px;
-    margin-bottom: 25px;
 }
 
-#itemId {
+input {
+    padding: 8px;
     flex: 1;
-    padding: 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
-    font-size: 16px;
 }
 
 button {
-    padding: 12px 25px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 6px;
+    padding: 8px 15px;
     cursor: pointer;
-    transition: background 0.2s;
-}
-
-button:hover {
-    background: #0056b3;
-}
-
-.item-list {
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
 }
 
 .item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 15px;
-    border-bottom: 1px solid #e0e0e0;
-}
-
-.item:last-child {
-    border-bottom: none;
-}
-
-.item-id {
-    font-weight: bold;
-    color: #2c3e50;
-    margin-right: 15px;
-}
-
-.item-name {
-    color: #7f8c8d;
-    flex: 1;
-}
-
-.remove-btn {
-    background: #e74c3c;
-    padding: 5px 10px;
-    border-radius: 4px;
-    transition: background 0.2s;
-}
-
-.remove-btn:hover {
-    background: #c0392b;
+    align-items: center;
 }

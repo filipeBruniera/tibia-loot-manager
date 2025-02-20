@@ -3,27 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de Loot - Blacklist</title>
-    <link rel="stylesheet" href="/style.css">
+    <title>Gerenciador de Loot</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Gerenciador de Blacklist</h1>
+        <h1>Blacklist de Itens</h1>
         
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Buscar item por ID ou nome...">
-            <div id="searchResults"></div>
-        </div>
-
         <div class="input-group">
-            <input type="number" id="itemId" placeholder="ID do item">
+            <input type="text" id="itemInput" placeholder="Digite ID ou nome do item">
             <button onclick="addItem()">Adicionar</button>
-            <button onclick="removeItem()">Remover</button>
         </div>
 
         <div id="itemList" class="item-list"></div>
     </div>
-
-    <script src="/app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
