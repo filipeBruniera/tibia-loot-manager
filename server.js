@@ -25,7 +25,7 @@ app.post('/add', async (req, res) => {
       let id = Number(input);
 
       if (isNaN(id)) {
-          const apiResponse = await fetch(`https://tibiawiki.dev/api/v2/items?name=${encodeURIComponent(input)}`);
+          const apiResponse = await fetch(`https://tibiawiki.dev/api/items?name=${input}`);
           const data = await apiResponse.json();
           
           if (!data.items || data.items.length === 0) {
@@ -58,7 +58,7 @@ app.post('/remove', (req, res) => {
 
 app.get('/item-name/:id', async (req, res) => {
     try {
-        const response = await fetch(`https://tibiawiki.dev/api/v2/items/${req.params.id}`);
+        const response = await fetch(`https://tibiawiki.dev/api/items/${req.params.id}`);
         const data = await response.json();
         res.json({ name: data.name || 'Nome desconhecido' });
     } catch {
