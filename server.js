@@ -19,7 +19,7 @@ const CACHE_FILE = 'item_cache.json';
 
 // Configurações iniciais
 app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 let itemsCache = {};
 
 try {
@@ -88,5 +88,12 @@ const startServer = () => {
 }
 
 startServer();
+
+setInterval(() => {
+  // Mantém o processo ativo
+}, 1000 * 60 * 5); // 5 minutos
+
+// Garanta que o servidor está exportado
+module.exports = app;
 
 });
