@@ -59,14 +59,21 @@ app.get('/item-search/:query', async (req, res) => {
   } catch {
     res.json({ results: [] });
   }
-  const server = app.listen(3000, '0.0.0.0', () => {
-    console.log(`Servidor rodando em http://0.0.0.0:3000`);
-  });
-  
-  server.on('error', (err) => {
-    console.error('Erro no servidor:', err);
-    process.exit(1);
-  });
+
+  // Modifique esta linha:
+app.listen(3000, () => {
+  console.log('Servidor rodando em http://localhost:3000');
 });
 
-// Mantenha as outras rotas (list, add, remove) inalteradas
+// Para:
+const server = app.listen(3000, '0.0.0.0', () => {
+  console.log(`Servidor rodando em http://0.0.0.0:3000`);
+});
+
+// Adicione tratamento de erros:
+server.on('error', (error) => {
+  console.error('Erro no servidor:', error);
+  process.exit(1);
+});
+
+});
