@@ -51,6 +51,7 @@ app.get('/item-name/:id', async (req, res) => {
   }
 });
 
+// Corrigindo a rota /item-search
 app.get('/item-search/:query', async (req, res) => {
   const query = req.params.query;
   
@@ -68,6 +69,11 @@ app.get('/item-search/:query', async (req, res) => {
   } catch {
     res.json({ results: [] });
   }
+}); // ← Faltava este fechamento
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Substitua o app.listen por:
 const startServer = () => {
@@ -87,13 +93,8 @@ const startServer = () => {
   }
 }
 
+console.log('📂 Diretório Público:', path.join(__dirname, 'public'));
+console.log('🔄 Verificando arquivos estáticos:');
+console.log(fs.readdirSync(path.join(__dirname, 'public')));
+
 startServer();
-
-setInterval(() => {
-  // Mantém o processo ativo
-}, 1000 * 60 * 5); // 5 minutos
-
-// Garanta que o servidor está exportado
-module.exports = app;
-
-});
