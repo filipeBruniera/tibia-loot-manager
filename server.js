@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
-const fetch = require('node-fetch').default;
+const fetch = require('node-fetch');
 
 const app = express();
 const jsonPath = process.env.JSON_PATH || '/workspaces/tibia-loot-manager/lootBlackWhitelist.json';
