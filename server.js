@@ -1,3 +1,12 @@
+process.on('uncaughtException', (err) => {
+  console.error('Erro não tratado:', err);
+  process.exit(1);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Rejeição não tratada em:', promise, 'motivo:', reason);
+});
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
@@ -60,20 +69,24 @@ app.get('/item-search/:query', async (req, res) => {
     res.json({ results: [] });
   }
 
-  // Modifique esta linha:
-app.listen(3000, () => {
-  console.log('Servidor rodando em http://localhost:3000');
-});
+// Substitua o app.listen por:
+const startServer = () => {
+  try {
+    const server = app.listen(3000, '0.0.0.0', () => {
+      console.log(`✅ Servidor rodando em http://0.0.0.0:3000`);
+    });
+    
+    server.on('error', (error) => {
+      console.error('❌ Erro no servidor:', error);
+      setTimeout(startServer, 5000); // Reinicia após 5 segundos
+    });
+    
+  } catch (error) {
+    console.error('⛔ Erro crítico:', error);
+    process.exit(1);
+  }
+}
 
-// Para:
-const server = app.listen(3000, '0.0.0.0', () => {
-  console.log(`Servidor rodando em http://0.0.0.0:3000`);
-});
-
-// Adicione tratamento de erros:
-server.on('error', (error) => {
-  console.error('Erro no servidor:', error);
-  process.exit(1);
-});
+startServer();
 
 });
