@@ -1,16 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Gerenciador de Loot</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Loot - Blacklist</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Gerenciar Blacklist</h1>
+        <h1>Gerenciador de Blacklist</h1>
         
         <div class="search-box">
-            <input type="text" id="searchInput" placeholder="Buscar por ID ou nome...">
-            <div id="searchResults" class="search-results"></div>
+            <input type="text" id="searchInput" placeholder="Buscar item por ID ou nome...">
+            <div id="searchResults"></div>
         </div>
 
         <div class="input-group">
@@ -22,106 +24,6 @@
         <div id="itemList" class="item-list"></div>
     </div>
 
-    <script>
-        // Funções principais
-        async function loadList() {
-            try {
-                const response = await fetch('/list');
-                const data = await response.json();
-                updateList(data.blacklistTypes);
-            } catch (error) {
-                alert('Erro ao carregar lista');
-            }
-        }
-
-        async function updateList(items) {
-            const listDiv = document.getElementById('itemList');
-            listDiv.innerHTML = await Promise.all(items.map(async id => 
-                `<div class="item">
-                    <span class="item-id">${id}</span>
-                    <span class="item-name">${await getItemName(id)}</span>
-                    <button class="remove-btn" onclick="confirmRemove(${id})">×</button>
-                </div>`
-            )).then(html => html.join(''));
-        }
-
-        async function getItemName(id) {
-            try {
-                const response = await fetch(`/item-name/${id}`);
-                const data = await response.json();
-                return data.name;
-            } catch {
-                return 'Erro na consulta';
-            }
-        }
-
-        //busca
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-        clearTimeout(searchTimeout);
-        searchTimeout = setTimeout(async () => {
-            const query = e.target.value.trim();
-            if (!query) return;
-
-            try {
-            const response = await fetch(`/item-search/${encodeURIComponent(query)}`);
-            const data = await response.json();
-            displaySearchResults(data.results);
-            } catch (error) {
-            console.error('Erro na busca:', error);
-            }
-        }, 500);
-        });
-
-        function displaySearchResults(results) {
-            const resultsDiv = document.getElementById('searchResults');
-            resultsDiv.innerHTML = results.map(item => `
-                <div class="result-item" onclick="selectItem(${item.id}, '${item.name}')">
-                    <span class="result-id">${item.id}</span>
-                    <span class="result-name">${item.name}</span>
-                </div>
-            `).join('');
-        }
-
-        function selectItem(id, name) {
-            document.getElementById('itemId').value = id;
-            document.getElementById('searchInput').value = `${id} - ${name}`;
-            document.getElementById('searchResults').innerHTML = '';
-        }
-
-        // Ações
-        async function addItem() {
-            const id = document.getElementById('itemId').value;
-            if (!id || !confirm(`Adicionar item ${id} à blacklist?`)) return;
-            
-            try {
-                await fetch('/add', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id })
-                });
-                loadList();
-                document.getElementById('itemId').value = '';
-            } catch (error) {
-                alert('Erro ao adicionar item');
-            }
-        }
-
-        async function confirmRemove(id) {
-            if (!confirm(`Remover item ${id} da blacklist?`)) return;
-            try {
-                await fetch('/remove', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id })
-                });
-                loadList();
-            } catch (error) {
-                alert('Erro ao remover item');
-            }
-        }
-
-        // Inicialização
-        loadList();
-    </script>
+    <script src="/app.js"></script>
 </body>
 </html>
